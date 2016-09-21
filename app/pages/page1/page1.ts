@@ -28,20 +28,19 @@ private parseRepos = function (data) {
       //tmp = data._body;
 
       //var items = $(tmp.body.children).find('.list');
-      $(data._body).filter(function( index ) {
-        return $( ".repo-list", this ).length === 1;
-      })
-    .css( "background-color", "red" );
-      //var items = $(data._body).find('.repo-list');
+      var repos = $(data._body).find('.repo-list').children();
+      var reps = [];
 
-      var repos = [];
-      // for (var i = 0; i < items.length; i++) {
-      //     var repo = {
-      //         Name: $(items[i]).children('a')[0].innerText,
-      //         Date: $(items[i]).children('strong')[0].innerText
-      //     };
-      //     repos.push(repo);
-      // }
+       for (var i = 0; i < repos.length; i++) {
+
+          var repo = {
+              Name: $(repos[i]).find(".prefix").text() + "/" + $(repos[0]).find(".prefix").text(),
+              Descrption: $(repos[i]).find(".repo-list-description").text().trim(),
+              Meta: $(repos[i]).find(".repo-list-meta").text().trim().replace(/\s\s+/g, ' '),
+              BuiltBy: $(repos[i]).find(".repo-list-meta").children('a').first().children("img").first().attr("src")
+          };
+          reps.push(repo);
+       }
 
       return repos;
   }
