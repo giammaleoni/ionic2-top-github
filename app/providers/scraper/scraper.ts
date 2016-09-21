@@ -18,18 +18,7 @@ export class Scraper {
   private data;
   private error;
 
-  httpCall(date: string = "daily", language: string = null): Observable<any> {
-      let url: string = this.base_url
-
-      if(language){url = url + "/" + language}
-      if(date) {url = url + "?since=" + date}
-
-      return this.http.get(url)
-        .map(this.data)
-        .catch(this.error);
-    }
-
-    load() {
+  load(date: string = "daily", language: string = null) {
     if (this.data) {
       // already loaded data
       return Promise.resolve(this.data);
@@ -37,11 +26,16 @@ export class Scraper {
 
     // don't have the data yet
     return new Promise(resolve => {
+
+      let url: string = this.base_url
+      if(language){url = url + language}
+      url = url + "?since=" + date;
+
       // We're using Angular HTTP provider to request the data,
       // then on the response, it'll map the JSON data to a parsed JS object.
       // Next, we process the data and resolve the promise with the new data.
-      this.http.get(this.base_url)
-        .map(res => res.json())
+      this.http.get(url)
+        .map(res => res)//res.json())
         .subscribe(data => {
           // we've got back the raw data, now generate the core schedule data
           // and save the data for later reference
